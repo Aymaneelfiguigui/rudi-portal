@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Annotation profile for rudi-parent" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <option name="mapstruct.verbose" value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.26/lombok-1.18.26.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.6.3/mapstruct-processor-1.6.3.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.6.3/mapstruct-1.6.3.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-configuration-processor/3.5.0/spring-boot-configuration-processor-3.5.0.jar" />
+        </processorPath>
+        <module name="rudi-facet-strukture-common" />
+        <module name="rudi-microservice-selfdata-service" />
+        <module name="rudi-facet-kaccess" />
+        <module name="rudi-microservice-kos-storage" />
+        <module name="rudi-microservice-apigateway-storage" />
+        <module name="rudi-microservice-konsult-facade" />
+        <module name="rudi-microservice-template-core" />
+        <module name="rudi-facet-selfdata" />
+        <module name="rudi-facet-generator-pdf" />
+        <module name="rudi-common-storage" />
+        <module name="rudi-microservice-strukture-core" />
+        <module name="rudi-microservice-apigateway-core" />
+        <module name="rudi-facet-providers" />
+        <module name="rudi-microservice-kalim-storage" />
+        <module name="rudi-facet-cms" />
+        <module name="rudi-facet-oauth2" />
+        <module name="rudi-microservice-strukture-facade" />
+        <module name="rudi-microservice-projekt-core" />
+        <module name="rudi-microservice-projekt-facade" />
+        <module name="rudi-common-core" />
+        <module name="rudi-microservice-kalim-service" />
+        <module name="rudi-microservice-template-facade" />
+        <module name="rudi-microservice-konsult-core" />
+        <module name="rudi-facet-bpmn" />
+        <module name="rudi-microservice-kalim-facade" />
+        <module name="rudi-microservice-konsent-facade" />
+        <module name="rudi-microservice-registry-facade" />
+        <module name="rudi-microservice-template-storage" />
+        <module name="rudi-facet-rva" />
+        <module name="rudi-common-test" />
+        <module name="rudi-facet-email" />
+        <module name="rudi-microservice-konsent-storage" />
+        <module name="rudi-microservice-acl-facade" />
+        <module name="rudi-microservice-projekt-service" />
+        <module name="rudi-application-front-office" />
+        <module name="rudi-common-service" />
+        <module name="rudi-facet-kos" />
+        <module name="rudi-microservice-acl-storage" />
+        <module name="rudi-facet-dataset" />
+        <module name="rudi-microservice-selfdata-core" />
+        <module name="rudi-microservice-kos-core" />
+        <module name="rudi-facet-generator-text" />
+        <module name="rudi-facet-generator-docx" />
+        <module name="rudi-facet-projekt" />
+        <module name="rudi-microservice-konsult-service" />
+        <module name="rudi-microservice-kos-service" />
+        <module name="rudi-microservice-selfdata-storage" />
+        <module name="rudi-microservice-template-service" />
+        <module name="rudi-microservice-kalim-core" />
+        <module name="rudi-microservice-strukture-storage" />
+        <module name="rudi-facet-core" />
+        <module name="rudi-facet-acl" />
+        <module name="rudi-microservice-apigateway-service" />
+        <module name="rudi-microservice-selfdata-facade" />
+        <module name="rudi-facet-generator" />
+        <module name="rudi-microservice-apigateway-facade" />
+        <module name="rudi-facet-dataverse" />
+        <module name="rudi-facet-organization" />
+        <module name="rudi-tools-nodestub" />
+        <module name="rudi-microservice-projekt-storage" />
+        <module name="rudi-common-facade" />
+        <module name="rudi-microservice-acl-core" />
+        <module name="rudi-facet-doks" />
+        <module name="rudi-microservice-gateway-facade" />
+        <module name="rudi-microservice-konsent-service" />
+        <module name="rudi-microservice-acl-service" />
+        <module name="rudi-microservice-strukture-service" />
+        <module name="rudi-facet-kmedia" />
+        <module name="rudi-facet-bucket-s3" />
+        <module name="rudi-facet-crypto" />
+        <module name="rudi-facet-apigateway" />
+        <module name="rudi-microservice-konsent-core" />
+        <module name="rudi-microservice-kos-facade" />
+        <module name="org.rudi.cms.magnolia" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="org.rudi.cms.magnolia" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-application-front-office" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-common-core" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-common-facade" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-common-service" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-common-storage" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-common-test" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-acl" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-apigateway" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-bpmn" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-bucket-s3" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-cms" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-core" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-crypto" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-dataset" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-dataverse" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-doks" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-email" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-generator" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-generator-docx" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-generator-pdf" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-generator-text" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-kaccess" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-kmedia" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-kos" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-oauth2" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-organization" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-projekt" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-providers" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-rva" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-selfdata" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-facet-strukture-common" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-acl-core" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-acl-facade" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-acl-service" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-acl-storage" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-apigateway-core" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-apigateway-facade" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-apigateway-service" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-apigateway-storage" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-gateway-facade" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-kalim-core" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-kalim-facade" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-kalim-service" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-kalim-storage" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-konsent-core" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-konsent-facade" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-konsent-service" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-konsent-storage" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-konsult-core" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-konsult-facade" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-konsult-service" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-kos-core" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-kos-facade" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-kos-service" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-kos-storage" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-projekt-core" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-projekt-facade" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-projekt-service" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-projekt-storage" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-registry-facade" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-selfdata-core" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-selfdata-facade" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-selfdata-service" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-selfdata-storage" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-strukture-core" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-strukture-facade" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-strukture-service" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-strukture-storage" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-template-core" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-template-facade" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-template-service" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-microservice-template-storage" options="-parameters -Amapstruct.verbose=true" />
+      <module name="rudi-tools-nodestub" options="-parameters -Amapstruct.verbose=true" />
+    </option>
+  </component>
+</project>
