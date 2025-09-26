@@ -1,4 +1,3 @@
----
 volumes:
   postgresql_data:
   registry_data:
@@ -13,7 +12,6 @@ volumes:
   projekt_data:
   selfdata_data:
   konsent_data:
-  
 
 services:
   database:
@@ -25,9 +23,9 @@ services:
       - postgresql_data:/var/lib/postgresql/data
     ports:
       - "35432:5432"
-    
+
   registry:
-    image: registry-image
+    image: rudi/registry:3.2.6
     depends_on:
       - database
     ports:
@@ -35,14 +33,15 @@ services:
       - "4441:4441"
     volumes:
       - ./config:/etc/rudi/config
+      - ./config/registry:/etc/rudi/config/microservice
       - ./data:/opt/rudi/data
     environment:
       - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
       - ADD_JAVA_OPTS=-Dcom.sun.management.jmxremote.port=4441 -Dcom.sun.management.jmxremote.rmi.port=4441 -Djava.rmi.server.hostname=registry -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
       - XMX=256M
-          
+
   gateway:
-    image: gateway-image
+    image: rudi/gateway:3.2.6
     depends_on:
       - database
     ports:
@@ -50,6 +49,7 @@ services:
       - "4442:4442"
     volumes:
       - ./config:/etc/rudi/config
+      - ./config/gateway:/etc/rudi/config/microservice
       - ./data:/opt/rudi/data
     environment:
       - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
@@ -57,7 +57,7 @@ services:
       - XMX=512M
 
   strukture:
-    image: strukture-image
+    image: rudi/strukture:3.2.6
     depends_on:
       - database
     ports:
@@ -65,27 +65,80 @@ services:
       - "4444:4444"
     volumes:
       - ./config:/etc/rudi/config
+      - ./config/strukture:/etc/rudi/config/microservice
       - ./data:/opt/rudi/data
     environment:
       - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
       - ADD_JAVA_OPTS=-Dcom.sun.management.jmxremote.port=4444 -Dcom.sun.management.jmxremote.rmi.port=4444 -Djava.rmi.server.hostname=strukture -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
 
   acl:
-    image: acl-image
-    depends_on:
-      - database
+    image: rudi/acl:3.2.6
+    depends_on: [database]
     ports:
-      - "8085:8085"
-      - "4445:4445"
+    - "8085:8085"
+    - "4445:4445"
     volumes:
       - ./config:/etc/rudi/config
+      - ./config/acl/application.properties:/etc/rudi/config/microservice/application.properties:ro
+      - ./config/acl/log4j2.xml:/etc/rudi/config/microservice/log4j2.xml:ro
       - ./data:/opt/rudi/data
     environment:
+      # Read ONLY your ACL folder for file-based props
+      - SPRING_CONFIG_LOCATION=file:/etc/rudi/config/acl/
+      - SPRING_CONFIG_NAME=application
+      - MODULE_OAUTH2_TRUST_ALL_CERTS=true
+      - MODULE_OAUTH2_PROVIDER_URI=http://gateway:8082/oauth2/token
+      - MODULE_OAUTH2_CHECK_TOKEN_URI=http://gateway:8082/oauth2/check_token
+      - MODULE_OAUTH2_CLIENT_ID=portal
+      - MODULE_OAUTH2_CLIENT_SECRET=portal-secret
+      - MODULE_OAUTH2_SCOPE=read,write
+      - EMAIL_PROJECTNAME=RUDI Dev
+      - EMAIL_URLSERVER=http://acl:8085
+      # optional dev-safety: turn off actual sending if supported
+      - RUDI_MAIL_ENABLED=false
+      - EMAIL_FROM=noreply@local
+      - RUDI_MAIL_ENABLED=false
+      - SPRING_MAIL_HOST=mailhog
+      - SPRING_MAIL_PORT=1025
+      - SPRING_MAIL_USERNAME=acl
+      - SPRING_MAIL_PASSWORD=acl
+      - SPRING_MAIL_PROTOCOL=smtp
+      - SPRING_MAIL_DEFAULT_ENCODING=UTF-8
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=false
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=false
+      - SPRING_MAIL_HOST=localhost
+      - SPRING_MAIL_PORT=2525
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=false
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=false
+      - RUDI_MAIL_ENABLED=false
+      - EMAIL_TEAMNAME=RUDI Dev Team
+      - FREEMARKER_BASEDIRECTORY=/opt/rudi_tmp
+      - MAIL_SMTP_HOST=localhost
+      - MAIL_SMTP_PORT=2525
+      - MAIL_SMTP_AUTH=false
+      - MAIL_SMTP_STARTTLS_ENABLE=false
+      - MAIL_FROM=noreply@local
+
+      # MISC DISABLE CAPTCHA
+      - SECURITY_CAPTCHA_ENABLED=false
+      - RUDI_CAPTCHA_ENABLED=false
+
+
+      # Use your log4j2.xml (also bound to the legacy path above)
+      - LOGGING_CONFIG=file:/etc/rudi/config/acl/log4j2.xml
+
+      # <<< THE IMPORTANT PART: ensure datasource exists at bootstrap >>>
+      - SPRING_APPLICATION_JSON={"spring":{"datasource":{"url":"jdbc:postgresql://database:5432/rudi?sslmode=disable","username":"acl","password":"acl"},"flyway":{"enabled":true},"jpa":{"properties":{"hibernate":{"default_schema":"acl_data"}}}}}
+
+      # Optional: JWT fallback (files already have it, this just removes any doubt)
+      - SECURITY_JWT_ACCESS_TOKENKEY=dev-key-123
+
+      # (the rest as you had)
       - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
-      - ADD_JAVA_OPTS=-Dcom.sun.management.jmxremote.port=4445 -Dcom.sun.management.jmxremote.rmi.port=4445 -Djava.rmi.server.hostname=acl -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
+      - ADD_JAVA_OPTS=-DRUDI_LOG_PATH=/opt/rudi/data/logs -Dcom.sun.management.jmxremote.port=4445 -Dcom.sun.management.jmxremote.rmi.port=4445 -Djava.rmi.server.hostname=acl -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
 
   kalim:
-    image: kalim-image
+    image: rudi/kalim:3.2.6
     depends_on:
       - database
     ports:
@@ -93,13 +146,14 @@ services:
       - "4446:4446"
     volumes:
       - ./config:/etc/rudi/config
+      - ./config/kalim:/etc/rudi/config/microservice
       - ./data:/opt/rudi/data
     environment:
       - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
       - ADD_JAVA_OPTS=-Dcom.sun.management.jmxremote.port=4441 -Dcom.sun.management.jmxremote.rmi.port=4441 -Djava.rmi.server.hostname=kalim -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
-      
+
   konsult:
-    image: konsult-image
+    image: rudi/konsult:3.2.6
     depends_on:
       - database
     ports:
@@ -107,13 +161,14 @@ services:
       - "4447:4447"
     volumes:
       - ./config:/etc/rudi/config
+      - ./config/konsult:/etc/rudi/config/microservice
       - ./data:/opt/rudi/data
     environment:
       - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
       - ADD_JAVA_OPTS=-Dcom.sun.management.jmxremote.port=4447 -Dcom.sun.management.jmxremote.rmi.port=4447 -Djava.rmi.server.hostname=konsult -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
 
   kos:
-    image: kos-image
+    image: rudi/kos:3.2.6
     depends_on:
       - database
     ports:
@@ -121,13 +176,14 @@ services:
       - "4448:4448"
     volumes:
       - ./config:/etc/rudi/config
+      - ./config/kos:/etc/rudi/config/microservice
       - ./data:/opt/rudi/data
     environment:
       - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
       - ADD_JAVA_OPTS=-Dcom.sun.management.jmxremote.port=4448 -Dcom.sun.management.jmxremote.rmi.port=4448 -Djava.rmi.server.hostname=kos -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
 
   projekt:
-    image: projekt-image
+    image: rudi/projekt:3.2.6
     depends_on:
       - database
     ports:
@@ -135,13 +191,14 @@ services:
       - "4449:4449"
     volumes:
       - ./config:/etc/rudi/config
+      - ./config/projekt:/etc/rudi/config/microservice
       - ./data:/opt/rudi/data
     environment:
       - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
       - ADD_JAVA_OPTS=-Dcom.sun.management.jmxremote.port=4449 -Dcom.sun.management.jmxremote.rmi.port=4449 -Djava.rmi.server.hostname=projekt -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
 
   selfdata:
-    image: selfdata-image
+    image: rudi/selfdata:3.2.6
     depends_on:
       - database
     ports:
@@ -149,13 +206,14 @@ services:
       - "4450:4450"
     volumes:
       - ./config:/etc/rudi/config
+      - ./config/selfdata:/etc/rudi/config/microservice
       - ./data:/opt/rudi/data
     environment:
       - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
       - ADD_JAVA_OPTS=-Dcom.sun.management.jmxremote.port=4450 -Dcom.sun.management.jmxremote.rmi.port=4450 -Djava.rmi.server.hostname=selfdata -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
 
   konsent:
-    image: konsent-image
+    image: rudi/konsent:3.2.6
     depends_on:
       - database
     ports:
@@ -163,14 +221,15 @@ services:
       - "4451:4451"
     volumes:
       - ./config:/etc/rudi/config
+      - ./config/konsent:/etc/rudi/config/microservice
       - ./data:/opt/rudi/data
     environment:
       - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
       - ADD_JAVA_OPTS=-Dcom.sun.management.jmxremote.port=4451 -Dcom.sun.management.jmxremote.rmi.port=4451 -Djava.rmi.server.hostname=konsent -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:4529
       - XMX=2G
-      
+
   apigateway:
-    image: apigateway-image
+    image: rudi/apigateway:3.2.6
     depends_on:
       - database
     ports:
@@ -178,21 +237,22 @@ services:
       - "4452:4452"
     volumes:
       - ./config:/etc/rudi/config
+      - ./config/apigateway:/etc/rudi/config/microservice
       - ./data:/opt/rudi/data
     environment:
       - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
       - ADD_JAVA_OPTS=-Dcom.sun.management.jmxremote.port=4452 -Dcom.sun.management.jmxremote.rmi.port=4452 -Djava.rmi.server.hostname=gateway -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
-      - XMX=512M      
+      - XMX=512M
 
   nodestub:
-    image: nodestub-image
+    image: rudi/nodestub:3.2.6
     ports:
       - "28001:28001"
       - "4528:4528"
     volumes:
       - ./config:/etc/rudi/config
+      - ./config/nodestub:/etc/rudi/config/microservice
       - ./data:/opt/rudi/data
     environment:
       - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
       - ADD_JAVA_OPTS=
-

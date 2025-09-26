@@ -32,7 +32,8 @@ export abstract class WorkerService<T extends TaskWithDependencies<A, D>,
             description: assetDescription.description,
             initiator: dependencies.initiatorInfo,
             status: task.functionalStatus,
-            processDefinitionKey: assetDescription.process_definition_key
+            processDefinitionKey: assetDescription.process_definition_key,
+            actions: task.actions
         } as RequestToStudy;
     }
 

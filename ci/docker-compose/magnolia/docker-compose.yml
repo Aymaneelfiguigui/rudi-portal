@@ -26,7 +26,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./config:/usr/local/tomcat/webapps/ROOT/WEB-INF/config
+      - ./config:/opt/magnolia/ROOT/WEB-INF/config
       - "./modules:/opt/magnolia/modules"
       - "./data:/opt/magnolia/data"
     environment:
@@ -34,4 +34,4 @@ services:
       - "MAGNOLIA_BDD_USER=magnolia-user"
       - "MAGNOLIA_BDD_PASSWORD=magnolia-password"
       - "MAGNOLIA_REPOSITORY_ROOT=/opt/magnolia/data"
-      - "CATALINA_OPTS=-DMAGNOLIA_REPOSITORY_ROOT=\"/opt/magnolia/data\"  -DMAGNOLIA_BDD_HOST=magnolia-database -DMAGNOLIA_BDD_USER=magnolia-user -DMAGNOLIA_BDD_PASSWORD=magnolia-password -Xmx2048m -Dmagnolia.update.auto=true"
+      - "CATALINA_OPTS=-DMAGNOLIA_REPOSITORY_ROOT=\"/opt/magnolia/data\"  -DMAGNOLIA_BDD_HOST=magnolia-database -DMAGNOLIA_BDD_USER=magnolia-user -DMAGNOLIA_BDD_PASSWORD=magnolia-password -Xmx2048m -Dmagnolia.update.auto=false"

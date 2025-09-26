@@ -1,8 +1,12 @@
 import {CommonModule} from '@angular/common';
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {MatCardModule} from '@angular/material/card';
+import {MatIconModule} from '@angular/material/icon';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
 import {MatTableModule} from '@angular/material/table';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {CoreModule} from '@core/core.module';
 import {
     OrganizationInformationComponent
@@ -78,6 +82,7 @@ import {DatasetTaskDetailComponent} from './pages/dataset-task-detail/dataset-ta
 import {MyAccountComponent} from './pages/my-account/my-account.component';
 import {MyActivityComponent} from './pages/my-activity/my-activity.component';
 import {MyNotificationsComponent} from './pages/my-notifications/my-notifications.component';
+import {ModerationCenterComponent} from './pages/moderation-center/moderation-center.component';
 import {MyProjectDetailsComponent} from './pages/my-project-details/my-project-details.component';
 import {NewRequestTaskDetailComponent} from './pages/new-request-task-detail/new-request-task-detail.component';
 import {OrganizationTaskDetailComponent} from './pages/organization-task-detail/organization-task-detail.component';
@@ -106,6 +111,7 @@ import {
         RemoveKeysDialogComponent,
         MyAccountComponent,
         MyNotificationsComponent,
+        ModerationCenterComponent,
         TasksComponent,
         DatasetTaskDetailComponent,
         ProjectDetailComponent,
@@ -152,11 +158,15 @@ import {
     imports: [
         CommonModule,
         SharedModule,
+        FormsModule,
         CoreModule,
         PersonalSpaceRoutingModule,
         MatTableModule,
         MatPaginatorModule,
         MatSortModule,
+        MatCardModule,
+        MatIconModule,
+        MatTooltipModule,
         ProjectModule,
     ]
     ,

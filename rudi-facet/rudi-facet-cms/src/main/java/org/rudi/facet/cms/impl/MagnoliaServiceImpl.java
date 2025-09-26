@@ -209,8 +209,8 @@ public class MagnoliaServiceImpl implements CmsService {
 						asset = downloadAsset(assetType, assetTemplate, request.getLocale(), item.getId());
 					}
 					if (asset != null) {
-						asset.setCreationDate(item.getCreated());
-						asset.setUpdateDate(item.getLastModified());
+					asset.setCreationDate(item.getCreated() != null ? item.getCreated().toLocalDateTime() : null);
+					asset.setUpdateDate(item.getLastModified() != null ? item.getLastModified().toLocalDateTime() : null);
 						elements.add(asset);
 					}
 				});

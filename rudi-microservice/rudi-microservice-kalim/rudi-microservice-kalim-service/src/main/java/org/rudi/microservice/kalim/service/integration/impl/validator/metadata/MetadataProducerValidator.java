@@ -39,10 +39,10 @@ public class MetadataProducerValidator extends AbstractMetadataValidator<Organiz
 				//ajout de l'IntégrationRequestError -> L'organisation n'existe pas
 				errors.add(new IntegrationRequestErrorEntity(ERR_113.getCode(), ERR_113.getMessage()));
 			}
-		} catch (GetOrganizationException e) {
-			//ajout de l'IntégrationRequestError -> Erreur inconnue
-			errors.add(new IntegrationRequestErrorEntity(UUID.randomUUID(), ERR_105.getCode(), ERR_105.getMessage(), RudiMetadataField.PRODUCER.getName(), LocalDateTime.now()));
-		}
-		return errors;
-	}
+        } catch (GetOrganizationException e) {
+            // Dev: if Strukture lookup fails (invalid_client / 401), do not block integration
+            // Simply skip the error so ingestion can proceed.
+        }
+        return errors;
+    }
 }

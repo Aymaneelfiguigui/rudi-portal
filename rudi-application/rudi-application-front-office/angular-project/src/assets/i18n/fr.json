@@ -260,7 +260,8 @@
             "myAccount": "Mon compte",
             "myActivity": "Mon activité",
             "myNotifications": "Mes notifications",
-            "mySelfdata": "Mes données personnelles"
+            "mySelfdata": "Mes données personnelles",
+            "moderationCenter": "Modération"
         }
     },
     "footer": {
@@ -1138,6 +1139,31 @@
             "project": "Réutilisation",
             "organization": "Organisation",
             "linkedProducer": "Organisation"
+        },
+        "moderationCenter": {
+            "title": "Centre de modération",
+            "subtitle": "Validez ou refusez les organisations et réutilisations en attente.",
+            "totalRequests": "Demandes à traiter",
+            "totalProjects": "Réutilisations",
+            "totalOrganizations": "Organisations",
+            "refresh": "Actualiser",
+            "filterType": "Type de demande",
+            "filterTypeAll": "Tous les types",
+            "filterStatus": "Statut",
+            "filterStatusAll": "Tous les statuts",
+            "filterSearch": "Rechercher",
+            "filterSearchPlaceholder": "Nom, porteur, statut...",
+            "columnType": "Type",
+            "columnDescription": "Description",
+            "columnInitiator": "Porteur",
+            "columnReceivedDate": "Reçue le",
+            "columnStatus": "Statut",
+            "columnActions": "Actions",
+            "actionOpen": "Ouvrir",
+            "emptyState": "Aucune demande en attente.",
+            "typeProject": "Réutilisation",
+            "typeOrganization": "Organisation",
+            "errorLoading": "Erreur lors du chargement des demandes."
         },
         "organizationDetails": {
             "declaration": "Déclaration d'organisation",

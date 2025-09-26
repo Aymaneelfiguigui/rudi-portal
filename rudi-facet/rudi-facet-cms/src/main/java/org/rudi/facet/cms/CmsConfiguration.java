@@ -16,7 +16,7 @@ import lombok.Getter;
 @Getter
 public class CmsConfiguration {
 
-	@Value("${cms.url}")
+	@Value("${cms.url:http://localhost:8080}")
 	private String url;
 
 	@Value("${cms.auth:false}")

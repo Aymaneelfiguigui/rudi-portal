@@ -6,5 +6,5 @@ childNodeTypes:
 workspace: category
 rootPath: /
 includeSystemProperties: false
-bypassWorkspaceAcls: false
+bypassWorkspaceAcls: true
 limit: 20

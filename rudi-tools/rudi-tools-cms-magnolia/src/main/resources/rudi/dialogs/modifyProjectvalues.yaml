@@ -1,0 +1,50 @@
+form:
+  tabs:
+    mainTab:
+      label: i18n:rudi-projectvalues.projectvalue
+      fields:
+        title:
+          fieldType: i18nRichText
+          rows: 5
+          label: i18n:rudi-projectvalues.title
+          required: true
+        shorttitle:
+          fieldType: i18nRichText
+          rows: 5
+          label: i18n:rudi-projectvalues.shorttitle
+          required: true
+        body:
+          fieldType: i18nRichText
+          rows: 25
+          label: i18n:rudi-projectvalues.body
+          required: true
+        image:
+          fieldType: link
+          required: false
+          appName: assets
+          label: i18n:rudi-projectvalues.image1
+        shortimage:
+          fieldType: link
+          required: false
+          appName: assets
+          label: i18n:rudi-projectvalues.image2
+        published:
+          fieldType: checkbox
+          defaultValue: false
+          buttonLabel: i18n:rudi-projectvalues.published
+        link:
+          fieldType: richText
+          rows: 5
+          required: false
+          label: i18n:rudi-projectvalues.link
+actions:
+  commit:
+    class: info.magnolia.ui.admincentral.dialog.action.SaveDialogActionDefinition
+  cancel:
+    class: info.magnolia.ui.admincentral.dialog.action.CancelDialogActionDefinition
+
+label: i18n:rudi-projectvalues.editor
+
+subAppId: detail
+
+workspace: projectvalues

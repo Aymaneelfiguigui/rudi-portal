@@ -1,3 +1,5 @@
+import {Action} from 'micro_service_modules/api-bpmn';
+
 export interface RequestToStudy {
     taskId: string;
     receivedDate: Date;
@@ -23,4 +25,9 @@ export interface RequestToStudy {
      * Type de la demande qui va être utilisé en clé de translate
      */
     processDefinitionKey?: string;
+
+    /**
+     * Actions disponibles sur la tâche
+     */
+    actions?: Action[];
 }

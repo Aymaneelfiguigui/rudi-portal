@@ -1,0 +1,9 @@
+form:
+  tabs:
+    mainTab:
+      label: i18n:rudi-projectvalues.categories
+      fields:
+        categories:
+          fieldType: category
+          required: true
+          label: i18n:rudi-projectvalues.category

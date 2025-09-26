@@ -1,0 +1,1 @@
+${projectName} - Account activation confirmation email

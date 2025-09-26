@@ -42,6 +42,7 @@ public class WebSecurityConfig {
 	@Value("${module.oauth2.check-token-uri}")
 	private String checkTokenUri;
 
+	@Value("${rudi.nodestub.security.authentication.disabled:false}")
 	private boolean disableAuthentification = false;
 
 	@Value("${rudi.nodestub.security.pre-authentication.disabled:false}")

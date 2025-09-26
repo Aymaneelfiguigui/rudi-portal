@@ -11,14 +11,18 @@ export abstract class MicroserviceOrganizationTaskMetierService<T> extends TaskM
     }
 
     searchMicroserviceTasks(searchCriteria: OrganizationTaskSearchCriteria): Observable<Task[]> {
+        const organizationStatus = searchCriteria.organizationStatus ?? OrganizationStatus.Draft;
+        const asAdmin = searchCriteria.asAdmin ?? false;
+
         return this.organizationTaskService.searchTasks(
             searchCriteria.title,
             searchCriteria.description,
             searchCriteria.processDefinitionKeys,
             searchCriteria.status,
             searchCriteria.fonctionalStatus,
-            OrganizationStatus.Draft,
-            false
+            organizationStatus,
+            asAdmin,
+            searchCriteria.organizationUuid
         );
     }
 

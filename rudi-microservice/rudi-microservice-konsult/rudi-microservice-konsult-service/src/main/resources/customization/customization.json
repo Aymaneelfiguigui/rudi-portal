@@ -1,6 +1,6 @@
 {
 	"overrideCssFile": "/style-override.css",
-	"mainLogo": "/assets/main-logo.svg",
+	"mainLogo": "/assets/capia-ub.png",
 	"mainLogoAltText": "Logo bleu orange beta du territoire",
 	"heroDescription": {
 		"leftImage": "/assets/hero/left-image.png",
@@ -181,7 +181,7 @@
 	},
 	"footerDescription": {
 		"footerLogo": {
-			"logo": "/assets/footer/logo.svg",
+			"logo": "/assets/capia-ub.png",
 			"url": "https://rudi.fr",
 			"logoAltText": "Logo bleu orange beta du territoire"
 		},

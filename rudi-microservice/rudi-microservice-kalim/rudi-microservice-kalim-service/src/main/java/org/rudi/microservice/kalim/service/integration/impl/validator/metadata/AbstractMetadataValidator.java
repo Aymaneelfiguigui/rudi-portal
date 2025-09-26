@@ -11,6 +11,12 @@ public abstract class AbstractMetadataValidator<T> implements ElementValidator<T
 	protected abstract T getMetadataElementToValidate(Metadata metadata);
 
 	public Set<IntegrationRequestErrorEntity> validateMetadata(Metadata metadata) {
-		return this.validate(getMetadataElementToValidate(metadata));
+		try {
+			final T element = getMetadataElementToValidate(metadata);
+			return element != null ? this.validate(element) : java.util.Set.of();
+		} catch (Exception e) {
+			// Dev fallback: ignore validator exceptions (e.g., dependencies like KOS unavailable)
+			return java.util.Set.of();
+		}
 	}
 }

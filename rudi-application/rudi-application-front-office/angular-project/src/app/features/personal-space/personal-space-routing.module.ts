@@ -4,6 +4,7 @@ import {mapToCanActivate, RouterModule, Routes} from '@angular/router';
 import {AuthGuardService as AuthGuard} from '@core/services/auth-guard.service';
 import {OwnerGuardService} from '@core/services/owner-guard.service';
 import {UserGuardService} from '@core/services/user-guard.service';
+import {ModeratorAdminGuardService} from '@core/services/moderator-admin-guard.service';
 import {
     LinkedProducerTaskDetailComponent
 } from '@features/personal-space/pages/linked-producer-task-detail/linked-producer-task-detail.component';
@@ -13,6 +14,7 @@ import {DatasetTaskDetailComponent} from './pages/dataset-task-detail/dataset-ta
 import {MyAccountComponent} from './pages/my-account/my-account.component';
 import {MyActivityComponent} from './pages/my-activity/my-activity.component';
 import {MyNotificationsComponent} from './pages/my-notifications/my-notifications.component';
+import {ModerationCenterComponent} from './pages/moderation-center/moderation-center.component';
 import {MyProjectDetailsComponent} from './pages/my-project-details/my-project-details.component';
 import {NewRequestTaskDetailComponent} from './pages/new-request-task-detail/new-request-task-detail.component';
 import {ProjectTaskDetailComponent} from './pages/project-task-detail/project-task-detail.component';
@@ -32,6 +34,11 @@ const routes: Routes = [
         path: 'my-account',
         component: MyAccountComponent,
         canActivate: mapToCanActivate([AuthGuard, UserGuardService])
+    },
+    {
+        path: 'moderation-center',
+        component: ModerationCenterComponent,
+        canActivate: mapToCanActivate([AuthGuard, ModeratorAdminGuardService])
     },
     {
         // Path my-notifications

@@ -1,0 +1,104 @@
+<app-page>
+    <app-loader [allPage]="false" [isTransparent]="true" [noText]="true" [active]="loading"></app-loader>
+
+    <app-page-title
+        [title1]="'personalSpace.moderationCenter.title' | translate"
+        [title3]="'personalSpace.moderationCenter.subtitle' | translate"
+        class="d-flex justify-content-center w-100">
+    </app-page-title>
+
+    <section class="summary" *ngIf="!loading">
+        <mat-card class="summary-card">
+            <div class="summary-value">{{ totalRequests }}</div>
+            <div class="summary-label">{{ 'personalSpace.moderationCenter.totalRequests' | translate }}</div>
+        </mat-card>
+        <mat-card class="summary-card">
+            <div class="summary-value">{{ countsByType[ModerationTaskType.PROJECT] }}</div>
+            <div class="summary-label">{{ 'personalSpace.moderationCenter.totalProjects' | translate }}</div>
+        </mat-card>
+        <mat-card class="summary-card">
+            <div class="summary-value">{{ countsByType[ModerationTaskType.ORGANIZATION] }}</div>
+            <div class="summary-label">{{ 'personalSpace.moderationCenter.totalOrganizations' | translate }}</div>
+        </mat-card>
+        <button mat-icon-button color="primary" class="refresh-button" (click)="refresh()" matTooltip="{{ 'personalSpace.moderationCenter.refresh' | translate }}">
+            <mat-icon>refresh</mat-icon>
+        </button>
+    </section>
+
+    <section class="filters" *ngIf="!loading">
+        <mat-form-field appearance="outline">
+            <mat-label>{{ 'personalSpace.moderationCenter.filterType' | translate }}</mat-label>
+            <mat-select [(value)]="filters.type" (selectionChange)="applyFilters()">
+                <mat-option value="ALL">{{ 'personalSpace.moderationCenter.filterTypeAll' | translate }}</mat-option>
+                <mat-option [value]="ModerationTaskType.PROJECT">{{ 'personalSpace.moderationCenter.typeProject' | translate }}</mat-option>
+                <mat-option [value]="ModerationTaskType.ORGANIZATION">{{ 'personalSpace.moderationCenter.typeOrganization' | translate }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>{{ 'personalSpace.moderationCenter.filterStatus' | translate }}</mat-label>
+            <mat-select [(value)]="filters.status" (selectionChange)="applyFilters()">
+                <mat-option value="ALL">{{ 'personalSpace.moderationCenter.filterStatusAll' | translate }}</mat-option>
+                <mat-option *ngFor="let status of statuses" [value]="status">{{ status }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="search-field">
+            <mat-label>{{ 'personalSpace.moderationCenter.filterSearch' | translate }}</mat-label>
+            <input matInput [(ngModel)]="filters.search" (ngModelChange)="applyFilters()" placeholder="{{ 'personalSpace.moderationCenter.filterSearchPlaceholder' | translate }}">
+            <button *ngIf="filters.search" matSuffix mat-icon-button aria-label="Reset" (click)="clearSearch()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+    </section>
+
+    <section class="table-container" *ngIf="!loading">
+        <ng-container *ngIf="dataSource?.data?.length; else emptyState">
+            <table mat-table [dataSource]="dataSource" class="moderation-table">
+
+                <ng-container matColumnDef="type">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'personalSpace.moderationCenter.columnType' | translate }}</th>
+                    <td mat-cell *matCellDef="let request">{{ getTypeLabel(getTaskType(request)) }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'personalSpace.moderationCenter.columnDescription' | translate }}</th>
+                    <td mat-cell *matCellDef="let request">{{ request.description }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="initiator">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'personalSpace.moderationCenter.columnInitiator' | translate }}</th>
+                    <td mat-cell *matCellDef="let request">{{ request.initiator }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="receivedDate">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'personalSpace.moderationCenter.columnReceivedDate' | translate }}</th>
+                    <td mat-cell *matCellDef="let request">{{ request.receivedDate | date:'short' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'personalSpace.moderationCenter.columnStatus' | translate }}</th>
+                    <td mat-cell *matCellDef="let request">{{ request.status }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'personalSpace.moderationCenter.columnActions' | translate }}</th>
+                    <td mat-cell *matCellDef="let request">
+                        <button mat-flat-button color="primary" (click)="openTask(request)">
+                            {{ 'personalSpace.moderationCenter.actionOpen' | translate }}
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns; trackBy: trackByTaskId"></tr>
+            </table>
+        </ng-container>
+    </section>
+
+    <ng-template #emptyState>
+        <div class="empty-state">
+            <p>{{ 'personalSpace.moderationCenter.emptyState' | translate }}</p>
+        </div>
+    </ng-template>
+</app-page>

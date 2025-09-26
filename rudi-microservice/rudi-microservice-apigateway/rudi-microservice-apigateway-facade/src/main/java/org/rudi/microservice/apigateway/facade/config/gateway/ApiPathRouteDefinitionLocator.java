@@ -104,11 +104,12 @@ public class ApiPathRouteDefinitionLocator extends InMemoryRouteDefinitionReposi
 		routeDefinition.setId(api.getUuid().toString());
 		routeDefinition.setUri(new URI(api.getUrl()));
 
-		if (!isValidUri(routeDefinition.getUri())) {
-			// reject uri
-			log.warn("Reject invalid uri {}", routeDefinition.getUri());
-			return;
-		}
+        if (!isValidUri(routeDefinition.getUri())) {
+            // reject uri (add more context to ease troubleshooting)
+            log.warn("Reject invalid uri {} for api globalId={}, mediaId={}, contract={}",
+                    routeDefinition.getUri(), api.getGlobalId(), api.getMediaId(), api.getContract());
+            return;
+        }
 
 		String path = preparePredicate(routeDefinition, api);
 

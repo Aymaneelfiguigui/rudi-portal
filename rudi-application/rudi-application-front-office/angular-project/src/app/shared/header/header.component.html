@@ -121,6 +121,9 @@
     <button mat-menu-item
             (click)="handleClickGoToMySelfdata()">{{ 'header.accountMenu.mySelfdata'| translate }}
     </button>
+    <button mat-menu-item *ngIf="canAccessModeration"
+            (click)="handleClickGoToModeration()">{{ 'header.accountMenu.moderationCenter'| translate }}
+    </button>
     <hr class="m-0">
     <button (click)="handleClickLogout()"
             mat-menu-item>{{ 'header.logOut'| translate }}

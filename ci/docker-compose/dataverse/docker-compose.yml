@@ -25,26 +25,49 @@ services:
       - traefik
 
   postgres:
-    networks:
-      - traefik
-    container_name: postgres
-    ports:
-      - "5433:5432"
     image: postgres:15.12-bookworm
+    container_name: postgres
     restart: unless-stopped
-
+    networks: [traefik]
+    ports: ["5433:5432"]
     environment:
-      - "LC_ALL=C.UTF-8"
-      - "POSTGRES_DB={{dataverse_db_name}}"
-      - "POSTGRES_USER={{dataverse_db_user}}"
-      - "POSTGRES_PASSWORD={{dataverse_db_password}}"
-      - "POSTGRES_DB_HOST={{ dataverse_db_host }}"
-      - "POSTGRES_PORT=5432"
-    env_file:
-      - .env
+      - POSTGRES_DB=${DATAVERSE_DB_NAME}
+      - POSTGRES_USER=${DATAVERSE_DB_USER}
+      - POSTGRES_PASSWORD=${DATAVERSE_DB_PASSWORD}
+    env_file: [.env]
     volumes:
-      - ./database-data:/var/lib/postgresql/data/ # persist data even if container shuts down
+      - ./database-data:/var/lib/postgresql/data
       - ./triggers:/triggers
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATAVERSE_DB_USER} -d ${DATAVERSE_DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  solr:
+    image: rudi/dataverse-solr-65
+    container_name: solr
+    privileged: true
+    networks: [traefik]
+    ports: ["8983:8983"]
+    environment:
+      - SOLR_PORT=8983
+      - SOLR_JAVA_MEM=-Xms1g -Xmx1g
+      - SOLR_OPTS=-Dlog4j2.formatMsgNoLookups=true -Dsolr.jetty.request.header.size=65535
+    env_file: [.env]
+    volumes:
+      - ./solr-data:/var/solr/data
+      - ./solr-tmp:/var/tmp
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.solr.rule=Host(`solr.${traefikhost}`)"
+      - "traefik.http.routers.solr.entrypoints=web"
+      - "traefik.http.services.solr.loadbalancer.server.port=8983"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8983/solr/admin/info/system || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   ns:
     networks:
@@ -69,32 +92,6 @@ services:
       - "traefik.http.routers.nde.rule=Host(`nde.${traefikhost}`)"
       - "traefik.http.services.nde.loadbalancer.server.port=8080"
 
-  solr:
-    networks:
-      - traefik
-    image: rudi/dataverse-solr-65
-    container_name: solr
-    privileged: true
-    ports:
-      - "8983:8983"
-    environment:
-      - "DATAVERSE_HOST=dataverse"
-      - "SOLR_HOST=solr"
-      - "SOLR_PORT=8983"
-      - "SOLR_JAVA_MEM=-Xms1g -Xmx1g"
-      - "SOLR_OPTS=-Dlog4j2.formatMsgNoLookups=true -Dsolr.jetty.request.header.size=65535"
-    env_file:
-      - .env
-    volumes:
-      - ./solr-tmp:/var/tmp
-      - ./solr-data:/var/solr/data
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.solr.rule=Host(`solr.${traefikhost}`)"
-      - "traefik.http.services.solr.loadbalancer.server.port=8983"
-      - "traefik.http.routers.solr.tls=true"
-      - "traefik.http.routers.solr.tls.certresolver=myresolver"
-
   whoami:
     networks:
       - traefik
@@ -107,107 +104,62 @@ services:
       - "traefik.http.routers.whoami.tls.certresolver=myresolver"
 
   dataverse:
-    networks:
-      - traefik
     image: rudi/dataverse-65
     container_name: dataverse
     privileged: true
-    user:
-      "root"
+    user: "root"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      solr:
+        condition: service_healthy
+    networks: [traefik]
     ports:
       - "4848:4848"
-      - "8095:8080"
+      - "8095:8080"  # direct access (bypass Traefik)
       - "8009:8009"
       - "8181:8181"
     environment:
-      - "CVM_SERVER_NAME=CESSDA" #Optional
-      - "CVM_SERVER_URL=https://ns.${traefikhost}:83"
-      - "cvManager=http://"
-      - "WEBHOOK=/opt/payara/triggers/external-services.py"
-      - "CESSDA"
-      - "CLARIN"
-      - "aws_bucket_name"
-      - "aws_s3_profile"
-      - "aws_endpoint_url"
-      - "system_email"
-      - "mailhost"
-      - "mailuser"
-      - "no_reply_email"
-      - "smtp_password"
-      - "smtp_port"
-      - "socket_port"
-      - "federated_json_file"
-      - "bucketname_1"
-      - "minio_label_1"
-      - "minio_bucket_1"
-      - "bucketname_2"
-      - "minio_profile_1"
-      - "minio_label_2"
-      - "minio_bucket_2"
-      - "minio_profile_2"
-      - "LANG=en"
-      - "MAINLANG=fr"
-      - "BUNDLEPROPERTIES=Bundle.properties"
-      - "ADMIN_USER=dataverseAdmin"
-      - "ADMIN_EMAIL=admin@localhost"
-      - "MAIL_SERVER=mailrelay"
-      - "SOLR_LOCATION=solr:8983"
-      - "RSERVE_HOST=localhost"
-      - "RSERVE_PORT=6311"
-      - "RSERVE_USER=rserve"
-      - "RSERVE_PASSWORD=rserve"
-      - "DATAVERSE_DB_HOST=postgres"
-      - "DATAVERSE_DB_PORT=5432"
-      - "DATAVERSE_DB_USER={{dataverse_db_user}}"
-      - "DATAVERSE_DB_PASSWORD={{dataverse_db_password}}"
-      - "DATAVERSE_DB_NAME={{dataverse_db_name}}"
-      - "POSTGRES_SERVER=postgres"
-      - "POSTGRES_PORT=5432"
-      - "POSTGRES_DATABASE={{dataverse_db_name}}"
-      - "POSTGRES_USER={{dataverse_db_user}}"
-      - "POSTGRES_PASSWORD={{dataverse_db_password}}"
-      - "PGPASSWORD"
-      - "DATAVERSE_SERVICE_HOST=dataverse"
-      - "DATAVERSE_URL=dataverse:8080"
-      - "SOLR_SERVICE_HOST=solr"
-      - "SOLR_SERVICE_PORT=8983"
-      - "GLASSFISH_DOMAIN=domain1"
-      - "SOLR_LOCATION=solr:8983"
-      - "INIT_SCRIPTS_FOLDER=/opt/payara/init.d"
-      - "hostname=dv.open-dev.com:8380"
-      - "TWORAVENS_LOCATION=NOT INSTALLED"
-      - "RSERVE_HOST=localhost"
-      - "RSERVE_PORT=6311"
-      - "RSERVE_USER=rserve"
-      - "RSERVE_PASSWORD=rserve"
-      - "dataverse_pid_providers=fake"
-      - "dataverse_pid_fake_type=FAKE"
-      - "dataverse_pid_fake_label=Fake DOI Provider"
-      - "dataverse_pid_fake_authority=10.5072"
-      - "dataverse_pid_fake_shoulder=FK2/"
-      - "dataverse_pid_default-provider=fake"
-      - "dataverse_files_storage-driver-id=file"
-      - "dataverse_files_file_type=file"
-      - "dataverse_files_file_directory=/data"
-      - "doi_authority"
-      - "doi_provider"
-      - "doi_username"
-      - "doi_password"
-      - "dataciterestapiurlstring"
-      - "baseurlstring"
-    env_file:
-      - .env
-    depends_on:
-      - postgres
-      - solr
+      - ADMIN_USER=${ADMIN_USER:-dataverseAdmin}
+      - ADMIN_EMAIL=${ADMIN_EMAIL:-admin@localhost}
+      - DATAVERSE_DB_HOST=postgres
+      - DATAVERSE_DB_PORT=5432
+      - DATAVERSE_DB_USER=${DATAVERSE_DB_USER}
+      - DATAVERSE_DB_PASSWORD=${DATAVERSE_DB_PASSWORD}
+      - DATAVERSE_DB_NAME=${DATAVERSE_DB_NAME}
+      - SOLR_LOCATION=solr:8983
+      - SOLR_HOST=solr
+      - SOLR_PORT=8983
+      - LANG=en
+      - MAINLANG=fr
+      - dataverse_files_storage-driver-id=file
+      - dataverse_files_file_type=file
+      - dataverse_files_file_directory=/data
+      # Database connection variables
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DATABASE=${DATAVERSE_DB_NAME}
+      - POSTGRES_USER=${DATAVERSE_DB_USER}
+      - POSTGRES_PASSWORD=${DATAVERSE_DB_PASSWORD}
+      - DATAVERSE_SOLR_HOST=solr
+      - DATAVERSE_SOLR_PORT=8983
+      - DATAVERSE_SOLR_CORE=collection1
+      - DATAVERSE_SOLR_PROTOCOL=http     
+    env_file: [.env]
     volumes:
-      - ./secrets:/secrets
-      - ./dataverse-deploy:/opt/payara/appserver/glassfish/domains/domain1/autodeploy
       - ./dataverse-files:/data
+      - ./dataverse-deploy:/opt/payara/appserver/glassfish/domains/domain1/autodeploy
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dataverse.rule=Host(`dv.${traefikhost}`)"
+      - "traefik.http.routers.dataverse.entrypoints=web"
       - "traefik.http.services.dataverse.loadbalancer.server.port=8080"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/ || exit 1"]
+      interval: 60s
+      timeout: 30s
+      retries: 10
+      start_period: 300s
 
 volumes:
   database-data:

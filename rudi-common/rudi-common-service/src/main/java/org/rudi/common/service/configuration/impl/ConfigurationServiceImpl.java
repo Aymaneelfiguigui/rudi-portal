@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class ConfigurationServiceImpl implements ConfigurationService {
 
-	@Value("${application.version}")
+	@Value("${application.version:unknown}")
 	private String applicationVersion;
 
-	@Value("${application.comment}")
+	@Value("${application.comment:}")
 	private String applicationComment;
 
 	/**

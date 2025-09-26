@@ -3,7 +3,7 @@
  */
 package org.rudi.facet.cms.impl.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -49,14 +49,14 @@ public class CmsMagnoliaImageMetadata extends CmsMagnoliaNode {
 
 	@Schema(name = "date", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
 	@JsonProperty("date")
-	private LocalDateTime date;
+	private OffsetDateTime date;
 
 	@Schema(name = "created", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
 	@JsonProperty("created")
-	private LocalDateTime created;
+	private OffsetDateTime created;
 
 	@Schema(name = "modified", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
 	@JsonProperty("modified")
-	private LocalDateTime modified;
+	private OffsetDateTime modified;
 
 }

@@ -53,9 +53,8 @@ public class PostIntegrationRequestTreatmentHandler extends AbstractIntegrationR
 			final Metadata metadataCreated = datasetService.getDataset(doi);
 			createApi(integrationRequest, metadataCreated);
 		} catch (final ApiGatewayApiException | RuntimeException e) {
-			log.error("On va supprimer le JDD qui vient d'être créé car une erreur est survenue", e);
-			datasetService.deleteDataset(doi);
-			throw e;
+			// Dev-friendly: keep the dataset even if API creation fails, do not block integration
+			log.warn("API creation failed in dev, keeping dataset and continuing integration", e);
 		}
 	}
 

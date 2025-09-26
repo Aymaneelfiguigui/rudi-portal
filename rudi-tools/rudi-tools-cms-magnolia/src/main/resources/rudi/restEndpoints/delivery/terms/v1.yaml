@@ -9,5 +9,5 @@ childNodeTypes:
   - mgnl:category
   - mgnl:contentNode
 includeSystemProperties: true
-bypassWorkspaceAcls: false
+bypassWorkspaceAcls: true
 limit: 50

@@ -1,0 +1,48 @@
+# Build outputs
+**/target/
+**/dist/
+**/build/
+
+# Node dependencies
+**/node_modules/
+
+# IDE caches
+.idea/**/workspace.xml
+.idea/**/usage.statistics.xml
+.idea/**/workspace.xml.zip
+.idea/**/shelf/
+.idea/**/httpRequests/
+.idea/**/dataSources/
+.idea/**/dataSources.local.xml
+.idea/**/tasks.xml
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Docker build artifacts and secrets
+ci/.ci/
+ci/docker-compose/**/.env
+ci/docker-compose/**/config/
+ci/docker-compose/magnolia/modules/
+ci/docker-compose/**/*.backup
+ci/docker-compose/dataverse/*.tsv
+ci/docker-parents/microservice/id_rsa
+ci/docker-parents/microservice/id_rsa.pub
+ci/docker/**/maven/
+ci/docker/**/*.jar
+ci/docker/**/*.ori
+ci/docker/**/*.tar
+ci/docker/**/*.tgz
+ci/docker/**/*.zip
+docker/
+
+# Angular / Node tooling artefacts
+**/.angular/
+**/micro_service_modules/
+**/node_installation/
+
+# Generated reports/cache
+*.log
+*.tmp
+**/.cache/

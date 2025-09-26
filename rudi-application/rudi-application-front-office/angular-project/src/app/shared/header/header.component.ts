@@ -11,11 +11,16 @@ import {CustomizationService} from '@core/services/customization.service';
 import {Base64EncodedLogo, ImageLogoService} from '@core/services/image-logo.service';
 import {LogService} from '@core/services/log.service';
 import {PropertiesMetierService} from '@core/services/properties-metier.service';
+import {UserService} from '@core/services/user.service';
 import {SnackBarService} from '@core/services/snack-bar.service';
 import {TranslateService} from '@ngx-translate/core';
 import {CustomizationDescription, KonsultService} from 'micro_service_modules/konsult/konsult-api';
 import {forkJoin, switchMap} from 'rxjs';
 import {Level} from '../notification-template/notification-template.component';
+import {User} from 'micro_service_modules/acl/acl-model';
+
+const ADMINISTRATOR_ROLE = 'ADMINISTRATOR';
+const MODERATOR_ROLE = 'MODERATOR';
 
 
 const DEFAULT_PICTO: Base64EncodedLogo = '/assets/images/logo_bleu_orange.svg';
@@ -42,6 +47,7 @@ export class HeaderComponent implements OnInit {
      * Est-ce qu'on est "connecté" CAD user non anonymous
      */
     isConnectedAsUser = false;
+    canAccessModeration = false;
 
     /**
      * Url d'accès à la documentation depuis le header
@@ -64,16 +70,18 @@ export class HeaderComponent implements OnInit {
         private readonly propertiesMetierService: PropertiesMetierService,
         private readonly snackBarService: SnackBarService,
         private readonly translateService: TranslateService,
-        private readonly konsultService: KonsultService,
-        private readonly logger: LogService,
-        private readonly imageLogoService: ImageLogoService,
-        private readonly customizationService: CustomizationService,
+                private readonly konsultService: KonsultService,
+                private readonly logger: LogService,
+                private readonly imageLogoService: ImageLogoService,
+                private readonly customizationService: CustomizationService,
+                private readonly userService: UserService,
     ) {
         this.logoIsLoading = false;
         // Quand l'utilisateur connecté change (on se connecte ou autre)
         this.authenticationService.authenticationChanged$.subscribe((state) => {
             // On est connecté si on est pas anonymous
             this.isConnectedAsUser = state === AuthenticationState.USER;
+            this.updateModerationAccess(state);
         });
         iconRegistry.addSvgIcon(
             'logo-bleu-orange',
@@ -139,6 +147,10 @@ export class HeaderComponent implements OnInit {
         return this.router.navigate(['/personal-space/selfdata-datasets']);
     }
 
+    handleClickGoToModeration(): Promise<boolean> {
+        return this.router.navigate(['/personal-space/moderation-center']);
+    }
+
     handleClickLogout(): void {
         this.authenticationService.logout().subscribe({
             next: () => {
@@ -158,6 +170,27 @@ export class HeaderComponent implements OnInit {
                 });
             }
         });
+        this.canAccessModeration = false;
+    }
+
+    private updateModerationAccess(state: AuthenticationState): void {
+        if (state !== AuthenticationState.USER) {
+            this.canAccessModeration = false;
+            return;
+        }
+        this.userService.getConnectedUser().subscribe({
+            next: (user: User | undefined) => {
+                this.canAccessModeration = this.hasModerationRole(user);
+            },
+            error: () => {
+                this.canAccessModeration = false;
+            }
+        });
+    }
+
+    private hasModerationRole(user: User | undefined): boolean {
+        const roles = user?.roles ?? [];
+        return roles.some(role => role.code === ADMINISTRATOR_ROLE || role.code === MODERATOR_ROLE);
     }
 
     private goToCatalogues(): void {

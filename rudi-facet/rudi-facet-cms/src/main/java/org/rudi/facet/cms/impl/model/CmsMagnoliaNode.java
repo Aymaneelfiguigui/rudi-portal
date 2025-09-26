@@ -3,7 +3,7 @@
  */
 package org.rudi.facet.cms.impl.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -44,7 +44,7 @@ public class CmsMagnoliaNode {
 
 	@Schema(name = "jcr:created", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
 	@JsonProperty("jcr:created")
-	private LocalDateTime jcrCreate;
+	private OffsetDateTime jcrCreate;
 
 	@Schema(name = "mgnl:lastActivatedBy", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
 	@JsonProperty("mgnl:lastActivatedBy")
@@ -52,7 +52,7 @@ public class CmsMagnoliaNode {
 
 	@Schema(name = "mgnl:lastActivated", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
 	@JsonProperty("mgnl:lastActivated")
-	private LocalDateTime lastActivated;
+	private OffsetDateTime lastActivated;
 
 	@Schema(name = "mgnl:createdBy", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
 	@JsonProperty("mgnl:createdBy")
@@ -60,7 +60,7 @@ public class CmsMagnoliaNode {
 
 	@Schema(name = "mgnl:created", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
 	@JsonProperty("mgnl:created")
-	private LocalDateTime created;
+	private OffsetDateTime created;
 
 	@Schema(name = "mgnl:lastModifiedBy", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
 	@JsonProperty("mgnl:lastModifiedBy")
@@ -68,10 +68,10 @@ public class CmsMagnoliaNode {
 
 	@Schema(name = "mgnl:lastModified", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
 	@JsonProperty("mgnl:lastModified")
-	private LocalDateTime lastModified;
+	private OffsetDateTime lastModified;
 
 	@Schema(name = "mgnl:activationStatus", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
 	@JsonProperty("mgnl:activationStatus")
-	private Boolean activationStatus;
+	private String activationStatus;
 
 }

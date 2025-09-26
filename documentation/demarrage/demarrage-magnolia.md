@@ -11,7 +11,7 @@ La version utilisée sur RUDI est indiquée dans le fichier [Dockerfile](/ci/doc
 Le placer dans le répertoire ``ci/docker/magnolia/`` sous le nom ``ROOT-6.2.48.tgz`` puis construire l'image :
 
 ```bash
-mv magnolia-community-webapp-6.2.48.war <rudi-portal>/ci/docker/magnolia/ROOT-6.2.48.tgz
+mv magnolia-community-webapp-6.2.48.war <rudi-portal>/ci/docker/magnolia/ROOT-6.2.48.war
 cd <rudi-portal>/ci/docker/magnolia/
 docker image build -t magnolia 
 ```
